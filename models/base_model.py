@@ -1,58 +1,50 @@
-#!/usr/bin/python3
-"""This module contains the base model
-    from which all others class will inherit
-"""
-
-from datetime import datetime
 from uuid import uuid4
+from datetime import datetime
 import models
 
+class BaseModel:
+    """Represents the BaseModel of the HBnB project."""
 
-class BaseModel():
-    """The base class for all others"""
+    DATE_FORMAT = "%Y-%m-%dT%H:%M:%S.%f"
 
     def __init__(self, *args, **kwargs):
-        """The initializer"""
+        """Initialize a new BaseModel instance.
 
-        date_format = '%Y-%m-%dT%H:%M:%S.%f'
+        Args:
+            *args (any): Unused.
+            **kwargs (dict): Key/value pairs of attributes.
+        """
         if kwargs:
-            for key, value in kwargs.items():
-                if "created_at" == key:
-                    self.created_at = datetime.strptime(kwargs["created_at"],
-                                                        date_format)
-                elif "updated_at" == key:
-                    self.updated_at = datetime.strptime(kwargs["updated_at"],
-                                                        date_format)
-                elif "__class__" == key:
-                    pass
-                else:
-                    setattr(self, key, value)
+            self.load_from_dict(kwargs)
         else:
             self.id = str(uuid4())
-            self.created_at = datetime.now()
-            self.updated_at = datetime.now()
+            self.created_at = self.updated_at = datetime.today()
             models.storage.new(self)
 
-    def __str__(self):
-        """Returns a string representation of this class"""
-
-        return ('[{}] ({}) {}'.
-                format(self.__class__.__name__, self.id, self.__dict__))
-
-    def __repr__(self):
-        """Return a string representation of this object"""
-
-        return (self.__str__())
+    def load_from_dict(self, data):
+        """Load attributes from a dictionary."""
+        for key, value in data.items():
+            if key in ["created_at", "updated_at"]:
+                setattr(self, key, datetime.strptime(value, self.DATE_FORMAT))
+            else:
+                setattr(self, key, value)
 
     def save(self):
-        """The save method for this object"""
-        self.updated_at = datetime.now()
+        """Update updated_at with the current datetime and save the object."""
+        self.updated_at = datetime.today()
         models.storage.save()
 
     def to_dict(self):
-        """Return a dict representation of this object"""
-        dic = self.__dict__.copy()
-        dic["created_at"] = self.created_at.isoformat()
-        dic["updated_at"] = self.updated_at.isoformat()
-        dic["__class__"] = self.__class__.__name__
-        return dic
+        """Return a dictionary representation of the BaseModel instance."""
+        return {
+            "id": self.id,
+            "created_at": self.created_at.strftime(self.DATE_FORMAT),
+            "updated_at": self.updated_at.strftime(self.DATE_FORMAT),
+            "__class__": self.__class__.__name__,
+            **self.__dict__
+        }
+
+    def __str__(self):
+        """Return the string representation of the BaseModel instance."""
+        class_name = self.__class__.__name
+        return f"[{class_name}] ({self.id}) {self.__dict__}"
