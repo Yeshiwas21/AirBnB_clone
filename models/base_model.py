@@ -3,56 +3,53 @@
     from which all others class will inherit
 """
 
+import uuid
 from datetime import datetime
-from uuid import uuid4
-import models
 
+class BaseModel:
+    """
+    This is the BaseModel class that defines common attributes/methods for other classes.
 
-class BaseModel():
-    """The base class for all others"""
+    Public instance attributes:
+    - id: string - assign with a unique ID when an instance is created.
+    - created_at: datetime - assign with the current datetime when an instance is created.
+    - updated_at: datetime - assign with the current datetime when an instance is created and update it
+      every time you change your object.
 
-    def __init__(self, *args, **kwargs):
-        """The initializer"""
+    Public instance methods:
+    - save(self): updates the 'updated_at' attribute with the current datetime.
+    - to_dict(self): returns a dictionary containing all keys/values of __dict__ of the instance.
 
-        date_format = '%Y-%m-%dT%H:%M:%S.%f'
-        if kwargs:
-            for key, value in kwargs.items():
-                if "created_at" == key:
-                    self.created_at = datetime.strptime(kwargs["created_at"],
-                                                        date_format)
-                elif "updated_at" == key:
-                    self.updated_at = datetime.strptime(kwargs["updated_at"],
-                                                        date_format)
-                elif "__class__" == key:
-                    pass
-                else:
-                    setattr(self, key, value)
-        else:
-            self.id = str(uuid4())
-            self.created_at = datetime.now()
-            self.updated_at = datetime.now()
-            models.storage.new(self)
+    This class will be the first piece of the serialization/deserialization process to create a dictionary
+    representation of our BaseModel objects.
+    """
+    
+    def __init__(self):
+        """
+        Initialize a BaseModel instance with a unique ID, creation time, and update time.
+        """
+        self.id = str(uuid.uuid4())
+        self.created_at = datetime.now()
+        self.updated_at = datetime.now()
 
     def __str__(self):
-        """Returns a string representation of this class"""
-
-        return ('[{}] ({}) {}'.
-                format(self.__class__.__name__, self.id, self.__dict__))
-
-    def __repr__(self):
-        """Return a string representation of this object"""
-
-        return (self.__str__())
+        """
+        Return a string representation of the object.
+        """
+        return f"[{type(self).__name__}] ({self.id}) {self.__dict__}"
 
     def save(self):
-        """The save method for this object"""
+        """
+        Update the 'updated_at' attribute with the current datetime.
+        """
         self.updated_at = datetime.now()
-        models.storage.save()
 
     def to_dict(self):
-        """Return a dict representation of this object"""
-        dic = self.__dict__.copy()
-        dic["created_at"] = self.created_at.isoformat()
-        dic["updated_at"] = self.updated_at.isoformat()
-        dic["__class__"] = self.__class__.__name__
-        return dic
+        """
+        Return a dictionary representation of the object.
+        """
+        obj_dict = self.__dict__.copy()
+        obj_dict['__class__'] = type(self).__name__
+        obj_dict['created_at'] = self.created_at.isoformat()
+        obj_dict['updated_at'] = self.updated_at.isoformat()
+        return obj_dict
