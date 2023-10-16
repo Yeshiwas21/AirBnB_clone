@@ -1,20 +1,43 @@
 #!/usr/bin/python3
-"""Defines the User class."""
+"""
+User Class
+==========
+
+This module defines the User class, which represents a user in a user management system.
+
+The User class inherits from the BaseModel class and is used to store information about users.
+
+Attributes:
+    username (str): The user's username.
+    email (str): The user's email address.
+    (You can add additional user-specific attributes as needed.)
+
+"""
 
 from models.base_model import BaseModel
 
 class User(BaseModel):
     """
-    The User class inherits from BaseModel and represents a User object.
+    Represents a user.
 
-    Public instance attributes:
-    - username: string - the user's username.
-    - email: string - the user's email.
+    Attributes:
+        username (str): The user's username.
+        email (str): The user's email address.
+        (You can add additional user-specific attributes as needed.)
 
-    Additional user-specific attributes can be added as needed.
     """
-    
+
     def __init__(self, username, email):
+        """
+        Constructor for the User class.
+
+        :param username: The user's username.
+        :type username: str
+        :param email: The user's email address.
+        :type email: str
+
+        (You can add additional user-specific attributes as needed.)
+        """
         super().__init__()
         self.username = username
         self.email = email
