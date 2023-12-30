@@ -1,26 +1,42 @@
-# models/base_model.py
-from datetime import datetime
+#!/usr/bin/python3
+"""Module for BaseModel class."""
 import uuid
-from models import storage  # Import storage locally within methods
+from datetime import datetime
+from models import storage
+
 
 class BaseModel:
+    """Define the BaseModel class."""
+
     def __init__(self, *args, **kwargs):
+        """Initialize an instance of BaseModel."""
         if kwargs:
+            if 'created_at' in kwargs:
+                kwargs['created_at'] = datetime.strptime(kwargs['created_at'], "%Y-%m-%dT%H:%M:%S.%f")
+            if 'updated_at' in kwargs:
+                kwargs['updated_at'] = datetime.strptime(kwargs['updated_at'], "%Y-%m-%dT%H:%M:%S.%f")
+
             for key, value in kwargs.items():
-                if key != "__class__":
-                    if key == "created_at" or key == "updated_at":
-                        setattr(self, key, datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%f"))
-                    else:
-                        setattr(self, key, value)
-            if "id" not in kwargs:
-                self.id = str(uuid.uuid4())
-            time_format = "%Y-%m-%dT%H:%M:%S.%f"
-            if "created_at" not in kwargs:
-                self.created_at = datetime.now()
-            if "updated_at" not in kwargs:
-                self.updated_at = datetime.now()
+                if key != '__class__':
+                    setattr(self, key, value)
+            storage.new(self)
+            return
+        self.id = str(uuid.uuid4())
+        self.created_at = self.updated_at = datetime.now()
+
+    def __str__(self):
+        """Return a string representation of the instance."""
+        return "[{}] ({}) {}".format(self.__class__.__name__, self.id, self.__dict__)
 
     def save(self):
-        storage.new(self)  # Use storage.new() instead of storage.new(self)
+        """Update the public instance attribute updated_at with the current datetime."""
+        self.updated_at = datetime.now()
         storage.save()
 
+    def to_dict(self):
+        """Return a dictionary containing all keys/values of __dict__ of the instance."""
+        obj_dict = self.__dict__.copy()
+        obj_dict['__class__'] = self.__class__.__name__
+        obj_dict['created_at'] = self.created_at.isoformat()
+        obj_dict['updated_at'] = self.updated_at.isoformat()
+        return obj_dict
