@@ -12,20 +12,8 @@ Attributes:
 
 from models.base_model import BaseModel
 
+
 class Amenity(BaseModel):
-    """
-    Represents an amenity.
+    """Class for managing amenity objects"""
 
-    Attributes:
-        name (str): The name of the amenity.
-    """
-
-    def __init__(self, name=""):
-        """
-        Constructor for the Amenity class.
-
-        :param name: The name of the amenity. (default is an empty string)
-        :type name: str
-        """
-        super().__init__()
-        self.name = name
+    name = ""

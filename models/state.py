@@ -12,20 +12,8 @@ Attributes:
 
 from models.base_model import BaseModel
 
+
 class State(BaseModel):
-    """
-    Represents a state.
+    """Class for managing state objects"""
 
-    Attributes:
-        name (str): The name of the state.
-    """
-
-    def __init__(self, name=""):
-        """
-        Constructor for the State class.
-
-        :param name: The name of the state. (default is an empty string)
-        :type name: str
-        """
-        super().__init__()
-        self.name = name
+    name = ""

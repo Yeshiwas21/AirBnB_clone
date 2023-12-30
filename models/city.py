@@ -13,24 +13,9 @@ Attributes:
 
 from models.base_model import BaseModel
 
+
 class City(BaseModel):
-    """
-    Represents a city.
+    """Class for managing city objects"""
 
-    Attributes:
-        state_id (str): The state ID of the city.
-        name (str): The name of the city.
-    """
-
-    def __init__(self, state_id="", name=""):
-        """
-        Constructor for the City class.
-
-        :param state_id: The state ID of the city. (default is an empty string)
-        :type state_id: str
-        :param name: The name of the city. (default is an empty string)
-        :type name: str
-        """
-        super().__init__()
-        self.state_id = state_id
-        self.name = name
+    state_id = ""
+    name = ""
