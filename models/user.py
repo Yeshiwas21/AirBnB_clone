@@ -16,29 +16,11 @@ Attributes:
 
 from models.base_model import BaseModel
 
+
 class User(BaseModel):
-    """
-    Represents a user.
+    """Class for managing user objects"""
 
-    Attributes:
-        username (str): The user's username.
-        email (str): The user's email address.
-        (You can add additional user-specific attributes as needed.)
-
-    """
-
-    def __init__(self, username, email):
-        """
-        Constructor for the User class.
-
-        :param username: The user's username.
-        :type username: str
-        :param email: The user's email address.
-        :type email: str
-
-        (You can add additional user-specific attributes as needed.)
-        """
-        super().__init__()
-        self.username = username
-        self.email = email
-        # Additional user-specific attributes can be added here
+    email = ""
+    password = ""
+    first_name = ""
+    last_name = ""
