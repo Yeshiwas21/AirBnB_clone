@@ -11,7 +11,7 @@ Unittest classes:
     TestHBNBCommand_destroy
     TestHBNBCommand_update
 """
-rom console import HBNBCommand
+from console import HBNBCommand
 from models.engine.file_storage import FileStorage
 import unittest
 import datetime
