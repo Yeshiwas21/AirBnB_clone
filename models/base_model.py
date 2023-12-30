@@ -2,6 +2,7 @@
 """Module for BaseModel class."""
 import uuid
 from datetime import datetime
+from models import storage
 
 
 class BaseModel:
@@ -18,6 +19,7 @@ class BaseModel:
             for key, value in kwargs.items():
                 if key != '__class__':
                     setattr(self, key, value)
+            storage.new(self)
             return
         self.id = str(uuid.uuid4())
         self.created_at = self.updated_at = datetime.now()
@@ -29,6 +31,7 @@ class BaseModel:
     def save(self):
         """Update the public instance attribute updated_at with the current datetime."""
         self.updated_at = datetime.now()
+        storage.save()
 
     def to_dict(self):
         """Return a dictionary containing all keys/values of __dict__ of the instance."""
