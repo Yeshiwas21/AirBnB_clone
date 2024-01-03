@@ -8,7 +8,7 @@
 > relevant to the finished product. The highlest numbered index.html file is
 > likewise the most relevant to the finished product.
 
-![M](https://i.imgur.com/ujItUkN.png)
+![M]([https://i.imgur.com/ujItUkN.png](https://i.imgur.com/lNgA5aO.jpg))
 
 ### Environment
 * Languages: HTML, CSS
